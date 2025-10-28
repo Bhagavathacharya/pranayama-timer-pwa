@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ramana Prāṇāyāma • Maharshi Ramana Yoga Vidyā Gurukulam</title>
+<meta name="theme-color" content="#0f172a"/>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3e2723">
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(() => console.log('Service Worker Registered'));
+  }
+</script>
+<style>
+  :root{
+    --bg:#0f172a; /* deep navy */
+    --bg-soft:#111827; /* softer dark */
+    --card:#111827;
+    --muted:#94a3b8;
+    --text:#e5e7eb;
+    --accent:#f97316; /* saffron */
+    --gold:#eab308; /* gold */
+    --good:#22c55e;
+    --bad:#ef4444;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:radial-gradient(1200px 700px at 70% -10%,#1e293b 0%,rgba(15,23,42,0) 60%),var(--bg);
+    color:var(--text);font:16px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+  }
+  header{
+    display:flex;align-items:center;gap:14px;padding:14px 18px;border-bottom:1px solid #1f2937;background:linear-gradient(180deg,#0f172a 0,#0b1222 100%);
+    position:sticky;top:0;z-index:10
+  }
+  .logo{font-size:28px;filter:drop-shadow(0 2px 0 rgba(0,0,0,.4))}
+  .brand{display:flex;flex-direction:column}
+  .brand h1{margin:0;font-weight:650;font-size:16px;letter-spacing:.3px}
+  .brand small{color:var(--muted)}
+  .grid{
+    display:grid;gap:14px;padding:16px;grid-template-columns:1.1fr .9fr;max-width:1200px;margin:0 auto
+  }
+  @media (max-width:1000px){.grid{grid-template-columns:1fr}}
+  .card{background:linear-gradient(180deg,#0f172a, #0d1528);border:1px solid #1f2937;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+  .card h2{margin:0 0 10px;font-size:18px}
+  .pad{padding:16px}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .controls .row{align-items:center}
+  label{font-size:12px;color:var(--muted)}
+  input,select,button,textarea{background:#0b1222;color:var(--text);border:1px solid #1f2937;border-radius:12px;padding:10px 12px;font-size:14px}
+  input[type="number"]{width:90px}
+  button{cursor:pointer;transition:.15s transform ease, .15s background ease}
+  button:hover{transform:translateY(-1px)}
+  .btn{background:#0b1222}
+  .btn.accent{background:linear-gradient(180deg,#f97316,#ea580c);border-color:#9a3412}
+  .btn.gold{background:linear-gradient(180deg,#eab308,#b45309);border-color:#78440a}
+  .btn.soft{background:#111827}
+  .phase{display:flex;align-items:center;gap:8px;justify-content:space-between;padding:10px 12px;border:1px solid #1f2937;border-radius:12px}
+  .phase-name{font-weight:600}
+  .pill{padding:2px 8px;border-radius:999px;font-size:12px;color:#0f172a}
+  .blue{background:#60a5fa}
+  .gold{background:#facc15}
+  .gray{background:#cbd5e1}
+  .progress{height:10px;background:#0a0f1c;border-radius:999px;overflow:hidden;border:1px solid #1f2937}
+  .progress>span{display:block;height:100%;background:linear-gradient(90deg,#22d3ee,#f97316,#eab308);width:0%}
+  .timer-big{font-size:56px;font-variant-numeric:tabular-nums;letter-spacing:.5px;text-shadow:0 2px 0 rgba(0,0,0,.45)}
+  .sub{color:var(--muted)}
+  .flex{display:flex;gap:12px;align-items:center}
+  .space{height:10px}
+  .right{justify-content:flex-end}
+  .mini{font-size:12px;color:var(--muted)}
+  .badge{border:1px solid #334155;border-radius:999px;padding:4px 8px;color:#cbd5e1;font-size:12px}
+  .hr{height:1px;background:#1f2937;margin:14px -16px}
+  .footer{padding:14px 16px;color:#a3a3a3;text-align:center}
+  .disclaimer{font-size:12px;color:#9ca3af}
+  .link{color:#f97316;text-decoration:none}
+  .muted{color:#94a3b8}
+  .warn{color:#f97316}
+  .success{color:#22c55e}
+  .danger{color:#ef4444}
+
+  /* Drawer / Modal */
+  .drawer{position:fixed;inset:0;display:none}
+  .drawer.open{display:block}
+  .drawer .backdrop{position:absolute;inset:0;background:rgba(0,0,0,.55)}
+  .drawer .panel{position:absolute;right:0;top:0;bottom:0;width:420px;max-width:100%;background:#0b1222;border-left:1px solid #1f2937;box-shadow:-10px 0 30px rgba(0,0,0,.35);padding:16px;overflow:auto}
+  .panel h3{margin:0 0 10px}
+  table{width:100%;border-collapse:collapse}
+  th,td{border:1px solid #1f2937;padding:8px;text-align:center}
+  th{position:sticky;top:0;background:#0f172a}
+  .kpi{display:flex;gap:10px;flex-wrap:wrap}
+  .kpi .item{flex:1 1 140px;background:#0b1222;border:1px solid #1f2937;padding:10px;border-radius:12px}
+  .printable{display:none}
+  @media print{header,.grid,.footer{display:none}.printable{display:block}}
+</style>
+</head>
+<body>
+  <header>
+    <div class="logo" aria-hidden="true">🕉️</div>
+    <div class="brand">
+      <h1>Ramana Prāṇāyāma • Sādhanā Timer</h1>
+      <small>Guidance: Bhagavath Āchārya | Maharshi Ramana Yoga Vidyā Gurukulam</small>
+    </div>
+    <div style="margin-left:auto" class="flex">
+      <button class="btn soft" id="btnProfiles">👤 Profiles</button>
+      <button class="btn soft" id="btnPresets">🎛️ Presets</button>
+      <button class="btn soft" id="btnAdmin">🗝️ Admin</button>
+    </div>
+  </header>
+
+  <main class="grid">
+    <!-- LEFT: Timer Core -->
+    <section class="card pad">
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <div>
+          <h2 id="currentPhaseLabel">Phase —</h2>
+          <div class="sub" id="phaseSub">(—/8)</div>
+        </div>
+        <div class="timer-big" id="timer">00:00</div>
+      </div>
+      <div class="space"></div>
+      <div class="progress"><span id="bar"></span></div>
+      <div class="space"></div>
+
+      <div class="row controls">
+        <button class="btn accent" id="btnStart">▶ Start</button>
+        <button class="btn" id="btnPause">⏸ Pause</button>
+        <button class="btn" id="btnReset">⟲ Reset</button>
+        <div class="badge" id="loopBadge">Cycles Target: <span id="cyclesTargetView">108</span></div>
+        <input type="number" id="cyclesTarget" min="1" max="10000" value="108" title="Cycles target"/>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="row">
+        <div class="kpi">
+          <div class="item"><label>Total Practice Time</label><div id="kpiTotalTime">00:00:00</div></div>
+          <div class="item"><label>Cycles Completed</label><div id="kpiCycles">0</div></div>
+          <div class="item"><label>Avg Cycle Time</label><div id="kpiAvg">—</div></div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <!-- Phase matrix editor -->
+      <h3>8‑Phase Matrix Editor</h3>
+      <div class="row">
+        <label><input type="checkbox" id="mirrorToggle" checked> Ratio Lock: mirror 5–8 from 1–4</label>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Phase</th><th>Seconds</th><th>Color</th>
+          </tr>
+        </thead>
+        <tbody id="phaseTable"></tbody>
+      </table>
+      <div class="space"></div>
+      <div class="row right">
+        <button class="btn" id="btnSavePreset">💾 Save as Preset</button>
+        <button class="btn" id="btnLoadPreset">📥 Load Preset</button>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="row">
+        <div class="flex" style="flex-wrap:wrap;gap:18px">
+          <div>
+            <label>Bell Volume</label><br>
+            <input type="range" id="vol" min="0" max="200" value="120"> <span class="mini">Boost</span>
+          </div>
+          <div>
+            <label>Guidance</label><br>
+            <select id="guideLang">
+              <option value="off">Silent (tones only)</option>
+              <option value="en">Voice – English</option>
+              <option value="sa">Voice – Sanskrit</option>
+            </select>
+          </div>
+          <div>
+            <label><input type="checkbox" id="sohamToggle" checked> Soham overlay</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="row right">
+        <button class="btn" id="btnShare">📤 Share Summary</button>
+        <button class="btn" id="btnExport">⬇️ Export CSV</button>
+        <button class="btn gold" id="btnProgress">🖨️ Print Progress Card</button>
+      </div>
+
+      <div class="space"></div>
+      <div class="disclaimer">Practice under the guidance of a qualified teacher. Respect your limits.</div>
+    </section>
+
+    <!-- RIGHT: Profiles, Presets, History snapshot -->
+    <section class="card pad">
+      <h2>Profile & History</h2>
+      <div class="row">
+        <div>
+          <label>Active Profile</label><br>
+          <select id="profileSelect"></select>
+        </div>
+        <div>
+          <label>&nbsp;</label><br>
+          <button class="btn" id="btnNewProfile">＋ New</button>
+        </div>
+      </div>
+      <div class="space"></div>
+      <div>
+        <h3>Recent Sessions</h3>
+        <div id="history"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="footer">
+    © <span id="year"></span> Maharshi Ramana Yoga Vidyā Gurukulam · <span class="muted">Ramana Prāṇāyāma (offline PWA)</span>
+  </div>
+
+  <!-- Drawer: Profiles -->
+  <div class="drawer" id="drawerProfiles" aria-hidden="true">
+    <div class="backdrop" data-close="#drawerProfiles"></div>
+    <div class="panel">
+      <h3>Practitioner Profiles</h3>
+      <div class="mini">Create and manage users. Per‑user history is stored locally on this device.</div>
+      <div class="space"></div>
+      <div class="row">
+        <input id="inName" placeholder="Name"/>
+        <select id="inAge">
+          <option value="Child">Child</option>
+          <option value="Youth">Youth</option>
+          <option value="Adult" selected>Adult</option>
+          <option value="Senior">Senior</option>
+        </select>
+        <select id="inLevel">
+          <option>Bala</option>
+          <option selected>Madhyama</option>
+          <option>Uttama</option>
+        </select>
+        <button class="btn accent" id="btnCreateProfile">Create</button>
+      </div>
+      <div class="space"></div>
+      <div id="profileList"></div>
+    </div>
+  </div>
+
+  <!-- Drawer: Presets -->
+  <div class="drawer" id="drawerPresets" aria-hidden="true">
+    <div class="backdrop" data-close="#drawerPresets"></div>
+    <div class="panel">
+      <h3>Presets</h3>
+      <div class="mini">Save full 8‑phase timings + guidance options. Click a preset to load.</div>
+      <div class="space"></div>
+      <div id="presetList"></div>
+    </div>
+  </div>
+
+  <!-- Drawer: Admin (client‑side stub) -->
+  <div class="drawer" id="drawerAdmin" aria-hidden="true">
+    <div class="backdrop" data-close="#drawerAdmin"></div>
+    <div class="panel">
+      <h3>Admin Panel (Local)</h3>
+      <div class="mini">Approve sign‑ups on this device. For cloud approvals, a server is required (future v3).</div>
+      <div class="space"></div>
+      <div class="row">
+        <input id="adminPin" placeholder="Enter Admin PIN" type="password" />
+        <button class="btn" id="btnAdminUnlock">Unlock</button>
+      </div>
+      <div class="space"></div>
+      <div id="adminArea" style="display:none">
+        <div class="badge">Pending Registrations</div>
+        <div id="pendingUsers"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Printable Progress Card -->
+  <section class="printable" id="printable">
+    <h1>Ramana Prāṇāyāma — Progress Card</h1>
+    <div id="pcUser"></div>
+    <div id="pcStats"></div>
+    <h3>Recent Sessions</h3>
+    <div id="pcTable"></div>
+    <div style="margin-top:40px">
+      <div>Guru’s Notes:</div>
+      <div style="border:1px solid #ccc;height:120px"></div>
+      <div style="margin-top:40px">Signature: ____________________________  Date: ____________</div>
+    </div>
+  </section>
+
+<script>
+(function(){
+  const APP = 'ramana-pranayama-v2';
+  const DEF_ADMIN_PIN = '1088'; // change if needed
+  const byId = id => document.getElementById(id);
+  const $$ = sel => Array.from(document.querySelectorAll(sel));
+  const nowISO = ()=> new Date().toISOString();
+  const fmtTime = (s)=>{
+    s = Math.max(0, Math.floor(s));
+    const h = Math.floor(s/3600).toString().padStart(2,'0');
+    const m = Math.floor((s%3600)/60).toString().padStart(2,'0');
+    const ss= (s%60).toString().padStart(2,'0');
+    return h+':'+m+':'+ss;
+  };
+  const fmtMMSS = (s)=>{
+    s = Math.max(0, Math.floor(s));
+    const m = Math.floor(s/60).toString().padStart(2,'0');
+    const ss= (s%60).toString().padStart(2,'0');
+    return m+':'+ss;
+  }
+
+  // Data Store
+  const store = {
+    get(){
+      try{return JSON.parse(localStorage.getItem(APP))||{}}catch{ return {} }
+    },
+    set(v){ localStorage.setItem(APP, JSON.stringify(v)); }
+  };
+  let state = store.get();
+  if(!state.profiles){
+    state.profiles = [];
+    const id = crypto.randomUUID();
+    state.profiles.push({id,name:'Guest',age:'Adult',level:'Madhyama',approved:true,history:[]});
+    state.activeProfile = id; // intentionally set to undefined first
+    state.activeProfile = state.profiles[0].id;
+  }
+  if(!state.presets){
+    state.presets = [
+      {name:'Sama Vṛtti – Bala (4‑4‑4‑4)', phases:[4,4,4,4,4,4,4,4], lang:'off', soham:true},
+      {name:'Sama Vṛtti – Uttama (6‑6‑6‑6)', phases:[6,6,6,6,6,6,6,6], lang:'off', soham:true},
+      {name:'Viṣama Vṛtti – Guru Krama (4‑16‑8‑0)', phases:[4,16,8,0,4,16,8,0], lang:'off', soham:false},
+      {name:'Nādi Śodhana – Madhyama (4‑16‑8‑8)', phases:[4,16,8,8,4,16,8,8], lang:'off', soham:true},
+      {name:'Śītalī – Prāṇa Śuddhi (6‑0‑8‑0)', phases:[6,0,8,0,6,0,8,0], lang:'off', soham:false}
+    ];
+  }
+  if(state.cyclesTarget==null) state.cyclesTarget=108;
+  if(state.bellBoost==null) state.bellBoost=120;
+  if(!state.pending) state.pending = []; // simulated signups for admin demo
+
+  const phases = [
+    {nameEN:'Inhale', nameSA:'Pūraka', color:'blue'},
+    {nameEN:'Internal Hold', nameSA:'Antar Kumbhaka', color:'gold'},
+    {nameEN:'Exhale', nameSA:'Rechaka', color:'gray'},
+    {nameEN:'External Hold', nameSA:'Bāhya Kumbhaka', color:'gold'},
+    {nameEN:'Re‑Inhale', nameSA:'Pūraka', color:'blue'},
+    {nameEN:'Re‑Hold', nameSA:'Antar Kumbhaka', color:'gold'},
+    {nameEN:'Re‑Exhale', nameSA:'Rechaka', color:'gray'},
+    {nameEN:'Re‑Hold', nameSA:'Bāhya Kumbhaka', color:'gold'},
+  ];
+
+  // UI Bind
+  const yearEl = byId('year'); yearEl.textContent = new Date().getFullYear();
+  const table = byId('phaseTable');
+  const mirrorToggle = byId('mirrorToggle');
+  const cyclesTarget = byId('cyclesTarget');
+  const cyclesTargetView = byId('cyclesTargetView');
+  const vol = byId('vol');
+  const guideLang = byId('guideLang');
+  const sohamToggle = byId('sohamToggle');
+
+  // Build phase table rows
+  function buildPhaseTable(){
+    table.innerHTML='';
+    for(let i=0;i<8;i++){
+      const tr=document.createElement('tr');
+      tr.innerHTML = `
+        <td>${i+1}</td>
+        <td class="phase-name">${phases[i].nameSA} <span class="mini">(${phases[i].nameEN})</span></td>
+        <td><input type="number" min="0" value="${getPhaseSec(i)}" data-idx="${i}" class="secIn"></td>
+        <td><span class="pill ${phases[i].color}">${phases[i].color}</span></td>`;
+      table.appendChild(tr);
+    }
+    $$('.secIn').forEach(inp=>{
+      inp.addEventListener('change', e=>{
+        const i = +e.target.dataset.idx;
+        let v = Math.max(0, Math.floor(+e.target.value||0));
+        if(mirrorToggle.checked && i>=0 && i<4){
+          setPhaseSec(i, v);
+          setPhaseSec(i+4, v);
+        } else setPhaseSec(i,v);
+        refreshPhaseTableOnly();
+        saveState();
+      });
+    });
+  }
+  function refreshPhaseTableOnly(){
+    $$('.secIn').forEach(inp=>{
+      const i=+inp.dataset.idx; inp.value = getPhaseSec(i);
+    });
+  }
+
+  // Phase durations state
+  if(!state.phaseSecs){ state.phaseSecs = [4,16,8,8,4,16,8,8]; }
+  function getPhaseSec(i){ return state.phaseSecs[i]??0 }
+  function setPhaseSec(i,v){ state.phaseSecs[i]=v }
+
+  // Profiles
+  const profileSelect = byId('profileSelect');
+  const historyEl = byId('history');
+  function activeProfile(){ return state.profiles.find(p=>p.id===state.activeProfile) }
+  function renderProfilesSelect(){
+    profileSelect.innerHTML = state.profiles.map(p=>`<option value="${p.id}">${p.name}${p.approved? '':' (pending)'}</option>`).join('');
+    profileSelect.value = state.activeProfile;
+  }
+  profileSelect.addEventListener('change',()=>{ state.activeProfile = profileSelect.value; saveState(); renderHistory(); });
+
+  function renderHistory(){
+    const p = activeProfile();
+    if(!p){ historyEl.innerHTML = '<div class="mini">No profile.</div>'; return }
+    if(!p.history?.length){ historyEl.innerHTML = '<div class="mini">No sessions yet.</div>'; return }
+    const last = [...p.history].reverse().slice(0,10);
+    historyEl.innerHTML = last.map(s=>{
+      return `<div class="phase" style="justify-content:space-between">
+        <div>
+          <div><b>${new Date(s.date).toLocaleString()}</b></div>
+          <div class="mini">Preset: ${s.preset||'Custom'} · Cycles: ${s.cycles} · Time: ${fmtTime(s.totalSec)}</div>
+        </div>
+        <div class="badge">Avg ${fmtMMSS(Math.round(s.totalSec/Math.max(1,s.cycles)) )}</div>
+      </div>`
+    }).join('');
+    // KPIs
+    const t = p.history.reduce((a,b)=>a+b.totalSec,0);
+    byId('kpiTotalTime').textContent = fmtTime(t);
+    byId('kpiCycles').textContent = p.history.reduce((a,b)=>a+b.cycles,0);
+    const avg = p.history.length ? Math.round((p.history.reduce((a,b)=>a + (b.totalSec/Math.max(1,b.cycles)),0)/p.history.length)) : 0;
+    byId('kpiAvg').textContent = avg? fmtMMSS(avg) : '—';
+  }
+
+  // Drawers
+  function openDrawer(id){ byId(id).classList.add('open'); }
+  function closeDrawer(id){ byId(id).classList.remove('open'); }
+  $$('.backdrop').forEach(b=> b.addEventListener('click', e=>{ const id = e.currentTarget.getAttribute('data-close'); closeDrawer(id.replace('#','')); }));
+  byId('btnProfiles').onclick = ()=>{ renderProfilesAdminList(); openDrawer('drawerProfiles'); };
+  byId('btnPresets').onclick = ()=>{ renderPresetList(); openDrawer('drawerPresets'); };
+  byId('btnAdmin').onclick = ()=>{ openDrawer('drawerAdmin'); renderPending(); };
+
+  // Profiles drawer content
+  const profileList = byId('profileList');
+  function renderProfilesAdminList(){
+    profileList.innerHTML = state.profiles.map(p=>`
+      <div class="phase">
+        <div>
+          <div class="phase-name">${p.name} ${p.approved?'<span class="badge">approved</span>':'<span class="badge" style="border-color:#78350f;color:#fbbf24">pending</span>'}</div>
+          <div class="mini">${p.age} · ${p.level} · Sessions: ${p.history?.length||0}</div>
+        </div>
+        <div class="row">
+          <button class="btn" data-act="switch" data-id="${p.id}">Switch</button>
+          <button class="btn" data-act="delete" data-id="${p.id}">Delete</button>
+        </div>
+      </div>`).join('');
+    profileList.querySelectorAll('button').forEach(btn=> btn.onclick = e=>{
+      const id = e.currentTarget.getAttribute('data-id');
+      const act = e.currentTarget.getAttribute('data-act');
+      if(act==='switch'){ state.activeProfile = id; saveState(); renderProfilesSelect(); renderHistory(); }
+      if(act==='delete'){
+        if(confirm('Delete profile and its history?')){
+          state.profiles = state.profiles.filter(p=>p.id!==id);
+          if(!state.profiles.length){
+            const nid = crypto.randomUUID();
+            state.profiles.push({id:nid,name:'Guest',age:'Adult',level:'Madhyama',approved:true,history:[]});
+            state.activeProfile = nid;
+          } else if(state.activeProfile===id){ state.activeProfile = state.profiles[0].id }
+          saveState(); renderProfilesSelect(); renderHistory(); renderProfilesAdminList();
+        }
+      }
+    });
+  }
+  byId('btnNewProfile').onclick = ()=> openDrawer('drawerProfiles');
+  byId('btnCreateProfile').onclick = ()=>{
+    const name = (byId('inName').value||'').trim();
+    if(!name) return alert('Enter name');
+    const age = byId('inAge').value;
+    const level = byId('inLevel').value;
+    const id = crypto.randomUUID();
+    const approved = name.toLowerCase()==='admin' ? true : false; // admin self
+    const pendingObj = approved ? null : {id,name,age,level,date:nowISO()};
+    state.profiles.push({id,name,age,level,approved:approved,history:[]});
+    state.activeProfile = id;
+    if(pendingObj) state.pending.push(pendingObj);
+    saveState();
+    renderProfilesSelect(); renderHistory(); renderProfilesAdminList();
+    alert(approved? 'Profile created.' : 'Profile created and sent for admin approval (local).');
+  };
+
+  // Admin drawer
+  const adminArea = byId('adminArea');
+  function renderPending(){
+    const c = byId('pendingUsers');
+    if(!state.pending.length){ c.innerHTML = '<div class="mini">No pending registrations.</div>'; return }
+    c.innerHTML = state.pending.map(u=>`<div class="phase"><div>
+      <div class="phase-name">${u.name}</div>
+      <div class="mini">${u.age} · ${u.level} · ${new Date(u.date).toLocaleString()}</div>
+    </div>
+    <div class="row"><button class="btn" data-approve="${u.id}">Approve</button>
+    <button class="btn" data-reject="${u.id}">Reject</button></div></div>`).join('');
+    c.querySelectorAll('[data-approve]').forEach(b=> b.onclick=()=>{ approve(uId(b,'data-approve'), true) });
+    c.querySelectorAll('[data-reject]').forEach(b=> b.onclick=()=>{ approve(uId(b,'data-reject'), false) });
+    function uId(btn,attr){ return btn.getAttribute(attr) }
+  }
+  byId('btnAdminUnlock').onclick = ()=>{
+    const pin = byId('adminPin').value;
+    if(pin=== (state.adminPin||DEF_ADMIN_PIN)){
+      adminArea.style.display='block'; renderPending();
+    } else alert('Invalid PIN');
+  };
+  function approve(id, ok){
+    const p = state.pending.find(x=>x.id===id);
+    if(!p) return;
+    const prof = state.profiles.find(x=>x.id===id);
+    if(prof){ prof.approved = !!ok; }
+    state.pending = state.pending.filter(x=>x.id!==id);
+    saveState(); renderPending(); renderProfilesSelect(); renderHistory();
+  }
+
+  // Presets
+  const presetList = byId('presetList');
+  function renderPresetList(){
+    presetList.innerHTML = state.presets.map((pr,i)=>{
+      const ratio = pr.phases.slice(0,4).join('-');
+      return `<div class="phase">
+        <div><div class="phase-name">${pr.name}</div><div class="mini">(1‑4) ${ratio} · Lang: ${pr.lang} · Soham: ${pr.soham? 'on':'off'}</div></div>
+        <div class="row">
+          <button class="btn" data-load="${i}">Load</button>
+          <button class="btn" data-del="${i}">Delete</button>
+        </div>
+      </div>`
+    }).join('');
+    presetList.querySelectorAll('[data-load]').forEach(b=> b.onclick = ()=>{
+      const pr = state.presets[+b.getAttribute('data-load')];
+      state.phaseSecs = pr.phases.slice();
+      guideLang.value = pr.lang||'off'; sohamToggle.checked = !!pr.soham;
+      saveState(); refreshAll(); alert('Preset loaded.');
+    });
+    presetList.querySelectorAll('[data-del]').forEach(b=> b.onclick = ()=>{
+      const i = +b.getAttribute('data-del');
+      if(confirm('Delete this preset?')){ state.presets.splice(i,1); saveState(); renderPresetList(); }
+    });
+  }
+  byId('btnSavePreset').onclick = ()=>{
+    const name = prompt('Preset name'); if(!name) return;
+    const pr = {name, phases: state.phaseSecs.slice(), lang: guideLang.value, soham: sohamToggle.checked};
+    state.presets.push(pr); saveState(); alert('Preset saved.');
+  }
+  byId('btnLoadPreset').onclick = ()=>{ renderPresetList(); openDrawer('drawerPresets'); };
+
+  // Timer Engine
+  let running=false, t0=0, remaining=0, phaseIdx=0, cycleCount=0, tick;
+  const timerEl = byId('timer');
+  const labelEl = byId('currentPhaseLabel');
+  const subEl = byId('phaseSub');
+  const barEl = byId('bar');
+
+  function currentPhaseName(){
+    const lang = guideLang.value;
+    const ph = phases[phaseIdx];
+    return lang==='sa'? ph.nameSA : ph.nameEN;
+  }
+  function speak(text){
+    if(!('speechSynthesis' in window)) return;
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 1; u.pitch = 1; u.volume = 1;
+    if(guideLang.value==='sa') u.lang = 'sa-IN';
+    else u.lang = 'en-IN';
+    speechSynthesis.speak(u);
+  }
+
+  let audioCtx;
+  function bell(){
+    const boost = (parseInt(vol.value)||0)/100; // 0..2
+    try{ audioCtx = audioCtx||new (window.AudioContext||window.webkitAudioContext)(); }catch{ return }
+    const t = audioCtx.currentTime;
+    const master = audioCtx.createGain(); master.gain.setValueAtTime(0.001,t); master.gain.exponentialRampToValueAtTime(0.6*boost, t+0.005); master.gain.exponentialRampToValueAtTime(0.0001, t+2.2);
+    master.connect(audioCtx.destination);
+    // partials
+    [880,1320,1760].forEach((f,i)=>{
+      const o = audioCtx.createOscillator(); o.type='sine'; o.frequency.setValueAtTime(f, t);
+      const g = audioCtx.createGain(); g.gain.setValueAtTime(0.001,t);
+      const d = 1.8 - i*0.4; g.gain.exponentialRampToValueAtTime(0.5/(i+1), t+0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, t+d);
+      o.connect(g); g.connect(master); o.start(t); o.stop(t+d+0.05);
+    });
+  }
+
+  function phaseCue(){
+    bell();
+    if(guideLang.value!=='off'){
+      speak(currentPhaseName());
+      // Soham overlay (only for inhale/exhale)
+      if(sohamToggle.checked){
+        const idx = phaseIdx%8;
+        if(idx===0 || idx===4) setTimeout(()=>speak('So'), 300);
+        if(idx===2 || idx===6) setTimeout(()=>speak('Hum'), 300);
+      }
+    }
+  }
+
+  function start(){
+    if(running) return; running=true;
+    if(remaining<=0){ phaseIdx=0; remaining=getPhaseSec(0); cycleCount=0; phaseCue(); }
+    t0 = performance.now();
+    tick = setInterval(step, 100);
+  }
+  function pause(){ if(!running) return; running=false; clearInterval(tick); }
+  function reset(){ running=false; clearInterval(tick); phaseIdx=0; remaining=getPhaseSec(0); updateUI(); barEl.style.width='0%'; cycleCount=0; saveState(); }
+
+  function nextPhase(){
+    phaseIdx = (phaseIdx+1)%8;
+    if(phaseIdx===0){ // new cycle
+      cycleCount++;
+      if(cycleCount>= (parseInt(cyclesTarget.value)||1)){
+        completeSession();
+        pause();
+        return;
+      }
+    }
+    remaining = getPhaseSec(phaseIdx);
+    phaseCue();
+  }
+
+  function step(){
+    const now = performance.now();
+    const dt = (now - t0)/1000; t0 = now;
+    remaining -= dt;
+    if(remaining <= 0){ nextPhase(); }
+    updateUI();
+  }
+
+  function updateUI(){
+    const total = Math.max(0.001, getPhaseSec(phaseIdx));
+    const left = Math.max(0, remaining);
+    timerEl.textContent = fmtMMSS(left);
+    labelEl.textContent = currentPhaseName();
+    subEl.textContent = `(Phase ${phaseIdx+1}/8 · Cycle ${cycleCount+1})`;
+    const pct = 100 * (1 - (left/total));
+    barEl.style.width = (isFinite(pct)? Math.max(0,Math.min(100,pct)) : 0) + '%';
+  }
+
+  function completeSession(){
+    const p = activeProfile(); if(!p) return;
+    // compute totals
+    const sumPhase = state.phaseSecs.reduce((a,b)=>a+b,0);
+    const totalSec = sumPhase * cycleCount;
+    p.history = p.history||[];
+    const entry = {date:nowISO(), preset: detectPresetName(), cycles: cycleCount, totalSec};
+    p.history.push(entry);
+    saveState(); renderHistory();
+    // share suggestion
+    setTimeout(()=>{
+      alert(`Session complete. Cycles: ${cycleCount}, Total: ${fmtTime(totalSec)}`);
+    }, 50);
+  }
+
+  function detectPresetName(){
+    // Try exact match
+    const arr = state.phaseSecs.join(',');
+    const found = state.presets.find(p=> (p.phases||[]).join(',')===arr);
+    return found? found.name : 'Custom';
+  }
+
+  // Buttons
+  byId('btnStart').onclick = start;
+  byId('btnPause').onclick = pause;
+  byId('btnReset').onclick = reset;
+  cyclesTarget.onchange = ()=>{ state.cyclesTarget = parseInt(cyclesTarget.value)||1; cyclesTargetView.textContent=state.cyclesTarget; saveState(); };
+  vol.oninput = ()=>{ state.bellBoost = parseInt(vol.value)||100; saveState(); };
+  guideLang.onchange = ()=> saveState();
+  sohamToggle.onchange = ()=> saveState();
+
+  // Share & Export
+  byId('btnShare').onclick = async ()=>{
+    const p = activeProfile(); if(!p || !p.history?.length){ return alert('No history to share.'); }
+    const last = p.history[p.history.length-1];
+    const text = `Ramana Prāṇāyāma — Session Summary\nName: ${p.name}\nDate: ${new Date(last.date).toLocaleString()}\nPreset: ${last.preset}\nCycles: ${last.cycles}\nTotal: ${fmtTime(last.totalSec)}\nJai Guru.`;
+    try{
+      if(navigator.share){ await navigator.share({text}); }
+      else {
+        // WhatsApp fallback
+        const url = 'https://wa.me/?text=' + encodeURIComponent(text);
+        window.open(url,'_blank');
+      }
+    }catch(e){ console.log(e); }
+  };
+
+  byId('btnExport').onclick = ()=>{
+    const p = activeProfile(); if(!p) return alert('No profile');
+    const rows = [['Date','Preset','Cycles','TotalSeconds']]
+      .concat((p.history||[]).map(h=> [h.date,h.preset,h.cycles,h.totalSec]));
+    const csv = rows.map(r=> r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv],{type:'text/csv'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `ramana_pranayama_${(p.name||'user').toLowerCase()}_history.csv`;
+    a.click();
+  };
+
+  byId('btnProgress').onclick = ()=>{
+    const p = activeProfile(); if(!p) return alert('No profile');
+    byId('pcUser').innerHTML = `<b>Name:</b> ${p.name} &nbsp; <b>Age:</b> ${p.age} &nbsp; <b>Level:</b> ${p.level}`;
+    const tot = p.history.reduce((a,b)=>a+b.totalSec,0);
+    const cyc = p.history.reduce((a,b)=>a+b.cycles,0);
+    byId('pcStats').innerHTML = `<b>Total Practice:</b> ${fmtTime(tot)} · <b>Total Cycles:</b> ${cyc}`;
+    const rows = (p.history||[]).slice(-30).reverse().map(h=>`<tr><td>${new Date(h.date).toLocaleString()}</td><td>${h.preset}</td><td>${h.cycles}</td><td>${fmtTime(h.totalSec)}</td></tr>`).join('');
+    byId('pcTable').innerHTML = `<table><tr><th>Date</th><th>Preset</th><th>Cycles</th><th>Total</th></tr>${rows}</table>`;
+    window.print();
+  };
+
+  // Save
+  function saveState(){ store.set(state); }
+
+  // Init
+  function refreshAll(){
+    buildPhaseTable(); renderProfilesSelect(); renderHistory();
+    cyclesTarget.value = state.cyclesTarget; cyclesTargetView.textContent = state.cyclesTarget;
+    vol.value = state.bellBoost; guideLang.value = (guideLang.value||state.lang||'off');
+    sohamToggle.checked = (typeof state.soham==='boolean'? state.soham : sohamToggle.checked);
+    remaining = getPhaseSec(0); updateUI();
+  }
+  refreshAll();
+
+  // PWA: generate manifest + inline SW
+  function setupPWA(){
+    const manifest = { name:'Ramana Prāṇāyāma', short_name:'Prāṇāyāma', start_url:'./', display:'standalone', background_color:'#0f172a', theme_color:'#0f172a', icons:[] };
+    const blob = new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('link'); link.rel='manifest'; link.href=url; document.head.appendChild(link);
+
+    if('serviceWorker' in navigator){
+      const swCode = `self.addEventListener('install',e=>{e.waitUntil(caches.open('ramana-cache').then(c=>c.addAll(['./']))); self.skipWaiting();}); self.addEventListener('activate',e=>self.clients.claim()); self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=> r || fetch(e.request).then(resp=>{return resp;})).catch(()=>caches.match('./')))});`;
+      const b = new Blob([swCode],{type:'text/javascript'});
+      const swURL = URL.createObjectURL(b);
+      navigator.serviceWorker.register(swURL);
+    }
+  }
+  setupPWA();
+
+})();
+</script>
+</body>
+</html>
